@@ -9,10 +9,10 @@ defmodule Helloworld do
   ## Examples
 
       iex> Helloworld.hello()
-      :world
+      "Hello world, im!"
 
   """
   def hello do
-    :world
+    "Hello world, im!"
   end
 end
