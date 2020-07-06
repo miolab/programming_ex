@@ -1,8 +1,8 @@
 defmodule HelloworldTest do
-  use ExUnit.Case
+  use PowerAssert
   doctest Helloworld
 
-  test "greets the world" do
+  test "hello function test" do
     # assert Helloworld.hello() == :world
     assert Helloworld.hello() == "Hello world, im!"
   end
