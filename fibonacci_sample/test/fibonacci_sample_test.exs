@@ -6,4 +6,8 @@ defmodule FibonacciSampleTest do
     # assert FibonacciSample.nth(1) == 2
     assert FibonacciSample.nth(1) == 1
   end
+
+  test "2nd number is expected 1" do
+    assert FibonacciSample.nth(2) == 2
+  end
 end

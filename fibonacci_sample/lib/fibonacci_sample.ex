@@ -17,4 +17,8 @@ defmodule FibonacciSample do
   def nth(1) do
     1
   end
+
+  def nth(2) do
+    1
+  end
 end
