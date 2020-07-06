@@ -1,24 +1,4 @@
 defmodule TimesTest do
-  @moduledoc """
-  入力数値を掛け算する関数 `double/1` を提供する
-
-  ## e.g 1
-    $ iex times.ex
-    iex> Times.double(10)
-    20
-    iex> Times.triple(1)
-    3
-    iex> Times.quadruple(100)
-    400
-    iex> Times.quadruple 100  # こう書いても実行可能
-
-  ## e.g 2
-    $ iex  # iexに入ってから開始
-    iex> c "times.ex"
-    [Times]
-    iex> Times.triple 2
-    6
-  """
   use ExUnit.Case
   doctest Times
 
