@@ -1,18 +1,20 @@
 defmodule FibonacciSample do
   @moduledoc """
-  Documentation for `FibonacciSample`.
+  Documentation for FibonacciSample.
+  1, 1, 2, 3, 5, 8, ... , (n-2)+(n-1)
   """
 
   @doc """
-  Hello world.
+  Fibonacci calculation test.
 
   ## Examples
 
-      iex> FibonacciSample.hello()
-      :world
+      iex> FibonacciSample.nth(1)
+      1
 
   """
-  def hello do
-    :world
+
+  def nth(1) do
+    1
   end
 end

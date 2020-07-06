@@ -1,6 +1,6 @@
 # FibonacciSample
 
-**TODO: Add description**
+Code of [https://qiita.com/im_miolab/items/cde950c8e45727cd3f61](https://qiita.com/im_miolab/items/cde950c8e45727cd3f61)
 
 ## Installation
 
@@ -18,4 +18,3 @@ end
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at [https://hexdocs.pm/fibonacci_sample](https://hexdocs.pm/fibonacci_sample).
-
