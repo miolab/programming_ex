@@ -10,8 +10,8 @@ defmodule Times do
     20
     iex> Times.triple 1
     3
-    iex> Times.triple(100)
-    300
+    iex> Times.quarduple(100)
+    400
 
   ## e.g 2
     iex> c "times.ex"
@@ -21,4 +21,5 @@ defmodule Times do
   """
   def double(n), do: n * 2
   def triple(n), do: n * 3
+  def quadruple(n), do: double(n) |> double
 end
