@@ -1,18 +1,16 @@
 defmodule Sum do
   @moduledoc """
-  Documentation for `Sum`.
+  整数の合計値を計算する関数を提供する。
   """
 
   @doc """
-  Hello world.
+  Function calc SUM with recursive.
 
   ## Examples
 
-      iex> Sum.hello()
-      :world
+      iex> Sum.calc_sum(0)
+      0
 
   """
-  def hello do
-    :world
-  end
+  def calc_sum(0), do: 0
 end
