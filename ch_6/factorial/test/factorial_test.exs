@@ -2,7 +2,7 @@ defmodule FactorialTest do
   use ExUnit.Case
   doctest Factorial
 
-  test "greets the world" do
-    assert Factorial.hello() == :world
+  test "" do
+    assert Factorial.of(0) == 0
   end
 end

@@ -1,18 +1,17 @@
 defmodule Factorial do
   @moduledoc """
-  Documentation for `Factorial`.
+  階乗を計算する関数を提供する。
   """
 
   @doc """
-  Hello world.
+  function: n!
 
   ## Examples
 
-      iex> Factorial.hello()
-      :world
+      iex> Factorial.of(0)
+      0
 
   """
-  def hello do
-    :world
-  end
+  def of(0), do: 1
+  def of(n), do: n * of(n - 1)
 end
