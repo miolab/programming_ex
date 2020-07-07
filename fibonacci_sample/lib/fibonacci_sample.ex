@@ -14,11 +14,7 @@ defmodule FibonacciSample do
 
   """
 
-  def nth(1) do
-    1
-  end
-
-  def nth(2) do
-    1
-  end
+  def nth(1), do: 1
+  def nth(2), do: 1
+  def nth(n), do: nth(n - 2) + nth(n - 1)
 end
