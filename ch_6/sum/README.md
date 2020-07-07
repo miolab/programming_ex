@@ -1,6 +1,6 @@
 # Sum
 
-**TODO: Add description**
+整数の合計値を計算する関数を提供する。
 
 ## Installation
 
@@ -18,4 +18,3 @@ end
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at [https://hexdocs.pm/sum](https://hexdocs.pm/sum).
-
