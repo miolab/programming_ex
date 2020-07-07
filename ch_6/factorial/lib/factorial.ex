@@ -9,7 +9,9 @@ defmodule Factorial do
   ## Examples
 
       iex> Factorial.of(0)
-      0
+      1
+      iex> Factorial.of(3)
+      6
 
   """
   def of(0), do: 1
