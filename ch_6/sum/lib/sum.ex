@@ -8,9 +8,12 @@ defmodule Sum do
 
   ## Examples
 
-      iex> Sum.calc_sum(0)
+      iex> Sum.calc(0)
       0
+      iex> Sum.calc(2)
+      3
 
   """
-  def calc_sum(0), do: 0
+  def calc(0), do: 0
+  def calc(n), do: n + calc(n - 1)
 end
