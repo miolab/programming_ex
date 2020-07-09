@@ -1,6 +1,6 @@
 defmodule Factorial do
   @moduledoc """
-  階乗を計算する関数を提供する。
+  階乗 n! を計算する関数を提供する。（n > 0）
   """
 
   @doc """
@@ -15,5 +15,8 @@ defmodule Factorial do
 
   """
   def of(0), do: 1
-  def of(n), do: n * of(n - 1)
+
+  def of(n) when n > 0 do
+    n * of(n - 1)
+  end
 end
