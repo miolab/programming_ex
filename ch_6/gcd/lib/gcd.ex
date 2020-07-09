@@ -11,7 +11,10 @@ defmodule Gcd do
 
       iex> Gcd.calc(10, 0)
       10
+      iex> Gcd.calc(10, 25)
+      5
 
   """
   def calc(x, 0), do: x
+  def calc(x, y), do: calc(y, rem(x, y))
 end
