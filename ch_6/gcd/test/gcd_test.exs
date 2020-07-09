@@ -2,7 +2,7 @@ defmodule GcdTest do
   use ExUnit.Case
   doctest Gcd
 
-  test "greets the world" do
-    assert Gcd.hello() == :world
+  test "return x, if y = 0" do
+    assert Gcd.calc(10, 0) == 10
   end
 end

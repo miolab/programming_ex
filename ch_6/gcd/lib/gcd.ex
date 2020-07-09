@@ -1,18 +1,17 @@
 defmodule Gcd do
   @moduledoc """
-  Documentation for `Gcd`.
+  2つの正の整数 x, y における最大公約数を求める関数を提供する。
+  * yが0のときはxを返す
   """
 
   @doc """
-  Hello world.
+  function of GCD.
 
   ## Examples
 
-      iex> Gcd.hello()
-      :world
+      iex> Gcd.calc(10, 0)
+      10
 
   """
-  def hello do
-    :world
-  end
+  def calc(x, 0), do: x
 end
