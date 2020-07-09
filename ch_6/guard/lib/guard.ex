@@ -10,9 +10,15 @@ defmodule Guard do
 
       iex> Guard.hello()
       :world
+      iex> Guard.what_is(100)
+      "100 is a Number."
 
   """
   def hello do
     :world
+  end
+
+  def what_is(x) when is_number(x) do
+    IO.inspect("#{x} is a Number.")
   end
 end
