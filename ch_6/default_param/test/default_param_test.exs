@@ -15,7 +15,7 @@ defmodule DefaultParamTest do
     assert DefaultParam.filled(10) == [10, 2, 3]
   end
 
-  test "params to be NOT given" do
+  test "NO param to be given" do
     assert DefaultParam.filled() == [1, 2, 3]
   end
 
@@ -26,5 +26,13 @@ defmodule DefaultParamTest do
 
   test "next func: two params to be given" do
     assert DefaultParam.incomplete(10, 20) == [10, 2, 20]
+  end
+
+  test "next func: (UndefinedFunctionError) one params to be given" do
+    assert_raise UndefinedFunctionError, fn -> DefaultParam.incomplete(10) end
+  end
+
+  test "next func: (UndefinedFunctionError) NO param to be given" do
+    assert_raise UndefinedFunctionError, fn -> DefaultParam.incomplete() end
   end
 end
