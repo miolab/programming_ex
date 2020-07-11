@@ -1,6 +1,6 @@
 # Programming Ex
 
-- プログラミング Elixir の演習コードを基にした拡張実装
+- プログラミング Elixir の演習コードを基にした拡張実装（Unit Test, Doc Test, etc.）
 - その他、自己研鑽で書いたコード管理
 
 のためのリポジトリ
