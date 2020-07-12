@@ -19,6 +19,10 @@ defmodule Chop do
       "Yes! It's 273 !!"
 
   """
+  def guess(actual, range = low..high) when actual not in low..high do
+    IO.inspect("Cannot!: Out of range")
+  end
+
   def guess(actual, range = low..high) do
     guess = div(low + high, 2)
     IO.inspect("Is it #{guess} ?")
