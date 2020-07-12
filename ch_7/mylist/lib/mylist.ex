@@ -1,18 +1,21 @@
 defmodule Mylist do
   @moduledoc """
-  Documentation for `Mylist`.
+  再帰的にリストを処理する関数を提供する。
   """
 
   @doc """
-  Hello world.
+  Function: Mylist
 
   ## Examples
 
-      iex> Mylist.hello()
-      :world
+      # リストの長さを求める
+      iex> Mylist.len([])
+      0
+      iex> Mylist.len(["a", "b", "c"])
+      3
 
   """
-  def hello do
-    :world
-  end
+  # リストの長さを求める
+  def len([]), do: 0
+  def len([_head | tail]), do: 1 + len(tail)
 end
