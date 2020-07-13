@@ -14,7 +14,7 @@ defmodule Mylist do
       iex> Mylist.len(["a", "b", "c"])
       3
 
-      # リストの各要素を2条する
+      # リストの各要素を2乗する
       iex> Mylist.square([])
       []
       iex> Mylist.square([1, 2, 3])
