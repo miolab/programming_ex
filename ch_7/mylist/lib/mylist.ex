@@ -25,7 +25,7 @@ defmodule Mylist do
   def len([]), do: 0
   def len([_head | tail]), do: 1 + len(tail)
 
-  # リストの各要素を2条する
+  # リストの各要素を2乗する
   def square([]), do: []
   def square([head | tail]), do: [head * head | square(tail)]
 end
