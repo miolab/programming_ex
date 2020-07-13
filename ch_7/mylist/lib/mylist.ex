@@ -20,6 +20,12 @@ defmodule Mylist do
       iex> Mylist.square([1, 2, 3])
       [1, 4, 9]
 
+      # リストの各要素に1を足す
+      iex(3)> Mylist.add_1([])
+      []
+      iex> Mylist.add_1([1, 2, 3])
+      [2, 3, 4]
+
   """
   # リストの長さを求める
   def len([]), do: 0
@@ -28,4 +34,8 @@ defmodule Mylist do
   # リストの各要素を2乗する
   def square([]), do: []
   def square([head | tail]), do: [head * head | square(tail)]
+
+  # リストの各要素に1を足す
+  def add_1([]), do: []
+  def add_1([head | tail]), do: [head + 1 | add_1(tail)]
 end

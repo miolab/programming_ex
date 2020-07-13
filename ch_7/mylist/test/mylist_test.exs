@@ -15,4 +15,11 @@ defmodule MylistTest do
     list_b = list |> Enum.map(&(&1 * &1))
     assert list_a == list_b
   end
+
+  test "function: add 1 each param of list" do
+    list = [1, 2, 3]
+    list_a = list |> Mylist.add_1()
+    list_b = list |> Enum.map(&(&1 + 1))
+    assert list_a == list_b
+  end
 end
