@@ -15,10 +15,6 @@ defmodule Infinity do
       [2, 3, 4, 5, 6]
 
   """
-  def hello do
-    :world
-  end
-
   @arr 1..100_000_000
 
   def enum_pipeline do

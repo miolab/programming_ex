@@ -7,6 +7,6 @@ defmodule InfinityTest do
   end
 
   test "stream_pipeline" do
-    assert Infinity.enum_pipeline() == [2, 3, 4, 5, 6]
+    assert Infinity.stream_pipeline() == [2, 3, 4, 5, 6]
   end
 end
