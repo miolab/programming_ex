@@ -1,6 +1,6 @@
 # Comprehension
 
-**TODO: Add description**
+**内包表記** により、リスト内要素を 2 乗したリストを返す関数を提供する。
 
 ## Installation
 
@@ -18,4 +18,3 @@ end
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at [https://hexdocs.pm/comprehension](https://hexdocs.pm/comprehension).
-
