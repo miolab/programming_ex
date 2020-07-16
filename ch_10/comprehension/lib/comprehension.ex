@@ -1,6 +1,6 @@
 defmodule Comprehension do
   @moduledoc """
-  内包表記による生成リストを返す関数を提供する。
+  内包表記による生成コレクションを返す関数を提供する。
   """
 
   @doc """
@@ -19,6 +19,12 @@ defmodule Comprehension do
       iex> Comprehension.replace_key_param([kitaq: :clear, fukuoka: :raining, shimonoseki: :smoggy])
       [clear: :kitaq, raining: :fukuoka, smoggy: :shimonoseki]
 
+      # リスト内の単語要素に対し、小文字（大文字）を併記したマップを返す
+      iex> ~w{cat dog} |> Comprehension.map_upcase
+      %{"cat" => "CAT", "dog" => "DOG"}
+
+      iex> ~w{APPLE ORANGE BANANA } |> Comprehension.map_downcase
+      %{"APPLE" => "apple", "BANANA" => "banana", "ORANGE" => "orange"}
   """
   def square(arr) do
     for x <- arr, do: x * x
@@ -30,5 +36,13 @@ defmodule Comprehension do
 
   def replace_key_param(keyword_list) do
     for {x, y} <- keyword_list, do: {y, x}
+  end
+
+  def map_upcase(arr) do
+    for x <- arr, into: %{}, do: {x, String.upcase(x)}
+  end
+
+  def map_downcase(arr) do
+    for x <- arr, into: Map.new(), do: {x, String.downcase(x)}
   end
 end
