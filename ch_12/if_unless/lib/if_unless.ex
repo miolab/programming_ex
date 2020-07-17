@@ -1,6 +1,6 @@
 defmodule IfUnless do
   @moduledoc """
-  制御フローを組み込んだ各関数を提供する。
+  制御フロー `if` `unless` を組み込んだ関数を提供する。
   """
 
   @doc """
