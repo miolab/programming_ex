@@ -1,6 +1,6 @@
 # CaseSample
 
-**TODO: Add description**
+制御フロー `Case` を組み込んだ関数を提供する。
 
 ## Installation
 
@@ -18,4 +18,3 @@ end
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at [https://hexdocs.pm/case_sample](https://hexdocs.pm/case_sample).
-
