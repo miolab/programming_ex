@@ -4,7 +4,7 @@ defmodule CaseSample do
   """
 
   @doc """
-  Function: CaseSample
+  Function: CaseSample.controle/1
 
   ## Examples
 
@@ -17,14 +17,36 @@ defmodule CaseSample do
       :ok
 
   """
-  def hello do
-    :world
-  end
-
   def controle(filename) do
     case File.open(filename) do
       {:ok, file} -> IO.puts("First line: #{IO.read(file, :line)}")
       {:error, reason} -> IO.puts("Failed to open file: #{reason}")
+    end
+  end
+
+  @doc """
+  Function: CaseSample.users/2
+
+  ## Examples
+
+      iex> CaseSample.users("Dave", 27)
+      "You are cleared to enter the Foo Bar, Dave"
+      :ok
+
+      iex> CaseSample.users("Dave", 20)
+      "Sorry, no admission"
+      :ok
+
+  """
+  def users(name, age) do
+    user = %{name: name, age: age}
+
+    case user do
+      person = %{age: age} when is_number(age) and age >= 21 ->
+        IO.puts("You are cleared to enter the Foo Bar, #{person.name}")
+
+      _ ->
+        IO.puts("Sorry, no admission")
     end
   end
 end
