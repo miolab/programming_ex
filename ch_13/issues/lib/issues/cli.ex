@@ -5,8 +5,16 @@ defmodule Issues.CLI do
   コマンドラインの解析と、GitHubプロジェクト内最後の_n_の課題テーブルを生成する関数へのディスパッチを処理する。
   """
 
+  @doc """
+  Function run/1
+  ## e.g.
+      $ mix run -e 'Issues.CLI.run(["-h"])'
+      usage: issues <user> <project> [count | 4]
+  """
   def run(argv) do
-    parse_args(argv)
+    argv
+    |> parse_args
+    |> process
   end
 
   @doc """
@@ -35,5 +43,17 @@ defmodule Issues.CLI do
       _ ->
         :help
     end
+  end
+
+  def process(:help) do
+    IO.puts("""
+    usage: issues <user> <project> [count | #{@default_count}]
+    """)
+
+    System.halt(0)
+  end
+
+  def process({user, project, _count}) do
+    Issues.GithubIssues.fetch(user, project)
   end
 end
