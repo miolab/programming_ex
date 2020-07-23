@@ -1,6 +1,8 @@
 # HttpoisonJason
 
-**TODO: Add description**
+- `HTTPoison`
+
+  [https://hexdocs.pm/httpoison/readme.html](https://hexdocs.pm/httpoison/readme.html)
 
 ## Installation
 
@@ -18,4 +20,3 @@ end
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at [https://hexdocs.pm/httpoison_jason](https://hexdocs.pm/httpoison_jason).
-

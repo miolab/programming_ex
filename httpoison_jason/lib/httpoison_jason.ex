@@ -4,15 +4,30 @@ defmodule HttpoisonJason do
   """
 
   @doc """
-  Hello world.
+  Function GET
 
   ## Examples
 
-      iex> HttpoisonJason.hello()
-      :world
+      iex> HttpoisonJason.app_status
+      200
 
   """
-  def hello do
-    :world
+
+  @url "https://jsonplaceholder.typicode.com/users"
+
+  def app_status do
+    response.status_code |> IO.inspect()
+  end
+
+  def app_headers do
+    response.headers |> IO.inspect()
+  end
+
+  def app_body do
+    response.body |> IO.inspect()
+  end
+
+  defp response do
+    @url |> HTTPoison.get!()
   end
 end
