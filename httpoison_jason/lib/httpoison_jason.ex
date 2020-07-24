@@ -24,7 +24,10 @@ defmodule HttpoisonJason do
   end
 
   def app_body do
-    response.body |> IO.inspect()
+    response.body
+    |> Jason.decode!()
+    |> Enum.map(&(&1 |> Map.get("username")))
+    |> IO.inspect()
   end
 
   defp response do

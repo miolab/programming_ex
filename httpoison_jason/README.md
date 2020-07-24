@@ -1,8 +1,7 @@
 # HttpoisonJason
 
-- `HTTPoison`
-
-  [https://hexdocs.pm/httpoison/readme.html](https://hexdocs.pm/httpoison/readme.html)
+- [HTTPoison](https://hexdocs.pm/httpoison/readme.html)
+- [Jason](https://hexdocs.pm/jason/readme.html)
 
 ## Installation
 
