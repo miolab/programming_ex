@@ -1,5 +1,11 @@
 # PhxHello
 
+Phoenix
+
+- [Official](https://phoenixframework.org/)
+
+- [GitHub](https://github.com/phoenixframework/phoenix)
+
 ## [Installation](https://hexdocs.pm/phoenix/installation.html)
 
 - 事前準備: PostgreSQL サーバー起動
@@ -35,6 +41,8 @@
     ```
 
 ## [Up and Running](https://hexdocs.pm/phoenix/up_and_running.html#content)
+
+### Up
 
 - プロジェクト作成
 
@@ -113,6 +121,22 @@
 
   ```elixir
   $ cd phx_hello/
+  ```
+
+  ```elixir
+  $ mix ecto.create
+
+  Compiling 14 files (.ex)
+  Generated phx_hello app
+  The database for PhxHello.Repo has been created
+  ```
+
+### Run
+
+- サーバー起動
+
+  ```elixir
+  $ mix phx.server
   ```
 
 ---
