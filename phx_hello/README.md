@@ -139,6 +139,16 @@ Phoenix
   $ mix phx.server
   ```
 
+  - Phoenix Framework welcome page [http://localhost:4000](http://localhost:4000)
+
+    <img width="796" alt="" src="https://user-images.githubusercontent.com/33124627/88469101-4286e680-cf28-11ea-8c1d-d310bb070873.png">
+
+  - Phoenix LiveDashboard [http://localhost:4000/dashboard](http://localhost:4000/dashboard)
+
+    <img width="1149" alt="" src="https://user-images.githubusercontent.com/33124627/88469130-bfb25b80-cf28-11ea-9971-393c0cc06a50.png">
+
+## [Directory structure](https://hexdocs.pm/phoenix/directory_structure.html)
+
 ---
 
 To start your Phoenix server:
