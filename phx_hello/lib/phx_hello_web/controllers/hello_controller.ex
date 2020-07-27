@@ -1,4 +1,4 @@
-defmodule PhxHelloWeb.PhxHelloController do
+defmodule PhxHelloWeb.HelloController do
   use PhxHelloWeb, :controller
 
   def index(conn, _params) do

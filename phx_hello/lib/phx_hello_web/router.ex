@@ -17,7 +17,7 @@ defmodule PhxHelloWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
-    get "/phx_hello", PhxHelloController, :index
+    get "/hello", HelloController, :index
   end
 
   # Other scopes may use custom stacks.
