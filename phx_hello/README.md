@@ -147,7 +147,13 @@ Phoenix
 
     <img width="1149" alt="" src="https://user-images.githubusercontent.com/33124627/88469130-bfb25b80-cf28-11ea-9971-393c0cc06a50.png">
 
+## [Request life-cycle](https://hexdocs.pm/phoenix/request_lifecycle.html#content)
+
 ## [Directory structure](https://hexdocs.pm/phoenix/directory_structure.html)
+
+- ルートの追加
+
+lib/phx_hello_web/router.ex
 
 ---
 
