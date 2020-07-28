@@ -147,15 +147,19 @@ Phoenix
 
     <img width="1149" alt="" src="https://user-images.githubusercontent.com/33124627/88469130-bfb25b80-cf28-11ea-9971-393c0cc06a50.png">
 
+---
+
 ## [Request life-cycle](https://hexdocs.pm/phoenix/request_lifecycle.html#content)
+
+---
 
 ## [Directory structure](https://hexdocs.pm/phoenix/directory_structure.html)
 
-### ルートの追加
-
 ルート `/hello` を準備し、エンドポイント `http://localhost:4000/hello` を作成する。
 
-- `lib/phx_hello_web/router.ex`
+### __ルート__ の追加
+
+- `lib/phx_hello_web/router.ex` を、以下のように修正
 
   ```elixir
   scope "/", PhxHelloWeb do
@@ -166,11 +170,75 @@ Phoenix
   end
   ```
 
-- `lib/phx_hello_web/controllers/hello_controller.ex`
+### __コントローラ__ の作成
+
+- `lib/phx_hello_web/controllers/hello_controller.ex` を、以下内容で新規作成
 
   ```elixir
-  
+  defmodule PhxHelloWeb.HelloController do
+    use PhxHelloWeb, :controller
+
+    def index(conn, _params) do
+      render(conn, "index.html")
+    end
+  end
   ```
+
+### __ビュー__ の作成
+
+- `lib/phx_hello_web/views/hello_view.ex` を、以下内容で新規作成
+
+  ```elixir
+  defmodule PhxHelloWeb.HelloView do
+    use PhxHelloWeb, :view
+  end
+  ```
+
+### __テンプレート__ の作成
+
+- `lib/phx_hello_web/templates/hello/index.html.eex` を、以下内容で新規作成
+
+  ```html
+  <section class="phx-hero">
+    <h2>Hello, im!</h2>
+  </section>
+  ```
+
+- サーバーを `ctrl + c` で停止して、ふたたび `mix phx.server` で起動
+
+  - [http://localhost:4000/hello](http://localhost:4000)
+
+    <img width="823" alt="" src="https://user-images.githubusercontent.com/33124627/88653950-b206fc80-d107-11ea-870a-9bb09191745b.png">
+
+- ルーティングを確認
+
+  ```elixir
+  $ mix phx.routes
+
+            page_path  GET  /                                      PhxHelloWeb.PageController :index
+          hello_path  GET  /hello                                 PhxHelloWeb.HelloController :index
+  live_dashboard_path  GET  /dashboard                             Phoenix.LiveView.Plug :home
+  live_dashboard_path  GET  /dashboard/:node/home                  Phoenix.LiveView.Plug :home
+  live_dashboard_path  GET  /dashboard/:node/os_mon                Phoenix.LiveView.Plug :os_mon
+  live_dashboard_path  GET  /dashboard/:node/metrics               Phoenix.LiveView.Plug :metrics
+  live_dashboard_path  GET  /dashboard/:node/applications          Phoenix.LiveView.Plug :applications
+  live_dashboard_path  GET  /dashboard/:node/processes             Phoenix.LiveView.Plug :processes
+  live_dashboard_path  GET  /dashboard/:node/ports                 Phoenix.LiveView.Plug :ports
+  live_dashboard_path  GET  /dashboard/:node/sockets               Phoenix.LiveView.Plug :sockets
+  live_dashboard_path  GET  /dashboard/:node/ets                   Phoenix.LiveView.Plug :ets
+  live_dashboard_path  GET  /dashboard/:node/request_logger        Phoenix.LiveView.Plug :request_logger
+  live_dashboard_path  GET  /dashboard/:node/:page                 Phoenix.LiveView.Plug :page
+            websocket  WS   /live/websocket                        Phoenix.LiveView.Socket
+            longpoll  GET  /live/longpoll                         Phoenix.LiveView.Socket
+            longpoll  POST  /live/longpoll                         Phoenix.LiveView.Socket
+            websocket  WS   /socket/websocket                      PhxHelloWeb.UserSocket
+  ```
+
+  - `/hello` でルートが作成されていることが確認できました↓↓↓
+
+    ```
+    hello_path  GET  /hello                                 PhxHelloWeb.HelloController :index
+    ```
 
 ---
 
