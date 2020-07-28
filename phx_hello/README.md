@@ -151,9 +151,26 @@ Phoenix
 
 ## [Directory structure](https://hexdocs.pm/phoenix/directory_structure.html)
 
-- ルートの追加
+### ルートの追加
 
-lib/phx_hello_web/router.ex
+ルート `/hello` を準備し、エンドポイント `http://localhost:4000/hello` を作成する。
+
+- `lib/phx_hello_web/router.ex`
+
+  ```elixir
+  scope "/", PhxHelloWeb do
+    pipe_through :browser
+
+    get "/", PageController, :index
+    get "/hello", HelloController, :index    # -> add
+  end
+  ```
+
+- `lib/phx_hello_web/controllers/hello_controller.ex`
+
+  ```elixir
+  
+  ```
 
 ---
 
