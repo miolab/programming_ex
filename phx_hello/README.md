@@ -6,7 +6,7 @@ Phoenix
 
 - [GitHub](https://github.com/phoenixframework/phoenix)
 
-## [Installation](https://hexdocs.pm/phoenix/installation.html)
+## :computer: [Installation](https://hexdocs.pm/phoenix/installation.html)
 
 - 事前準備: PostgreSQL サーバー起動
 
@@ -40,7 +40,7 @@ Phoenix
     * phx_new-1.5.4
     ```
 
-## [Up and Running](https://hexdocs.pm/phoenix/up_and_running.html#content)
+## :computer: [Up and Running](https://hexdocs.pm/phoenix/up_and_running.html#content)
 
 ### Up
 
@@ -149,11 +149,11 @@ Phoenix
 
 ---
 
-## [Request life-cycle](https://hexdocs.pm/phoenix/request_lifecycle.html#content)
+## :computer: [Directory structure](https://hexdocs.pm/phoenix/directory_structure.html)
 
 ---
 
-## [Directory structure](https://hexdocs.pm/phoenix/directory_structure.html)
+## :computer: [Request life-cycle](https://hexdocs.pm/phoenix/request_lifecycle.html#content)
 
 ルート `/hello` を準備し、エンドポイント `http://localhost:4000/hello` を作成する。
 
@@ -322,6 +322,29 @@ Phoenix
 
 ---
 
+## :computer: [Plug](https://hexdocs.pm/phoenix/plug.html#content)
+
+---
+
+## :computer: [Routing](https://hexdocs.pm/phoenix/routing.html#content)
+
+---
+
+## :computer: [Controllers](https://hexdocs.pm/phoenix/controllers.html#content)
+
+---
+
+## :computer: [Views and templates](https://hexdocs.pm/phoenix/views.html#content)
+
+---
+
+## :computer: [Ecto](https://hexdocs.pm/phoenix/ecto.html#content)
+
+---
+
+## []()
+
+---
 To start your Phoenix server:
 
 - Install dependencies with `mix deps.get`
