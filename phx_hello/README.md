@@ -242,6 +242,86 @@ Phoenix
 
 ---
 
+### __新エンドポイントを別途追加__
+
+1. ルート `/hello/:messenger` を準備し、エンドポイント `http://localhost:4000/hello/:messenger` を作成する。
+
+1. 上記 `:messenger` 部分を任意の名前に置き換えて、画面に名前を表示反映する
+
+- `router.ex` に、新ルートを追記
+
+  ```elixir
+  scope "/", PhxHelloWeb do
+    pipe_through :browser
+
+    get "/", PageController, :index
+    get "/hello", HelloController, :index
+    get "/hello/:messenger", HelloController, :show    # -> add
+  end
+  ```
+
+- `hello_controller.ex` コントローラに、新アクションを追記
+
+  ```elixir
+  defmodule PhxHelloWeb.HelloController do
+    use PhxHelloWeb, :controller
+
+    def index(conn, _params) do
+      render(conn, "index.html")
+    end
+
+    # add next def ~ end
+    def show(conn, %{"messenger" => messenger}) do
+      render(conn, "show.html", messenger: messenger)
+    end
+  end
+  ```
+
+- `lib/phx_hello_web/templates/hello/show.html.eex` テンプレートを、以下内容で新規作成
+
+  ```html
+  <section class="phx-hero">
+    <h2>Hello im, from messenger <%= @messenger %>!</h2>
+  </section>
+  ```
+
+- [`http://localhost:4000/hello/miolab`](http://localhost:4000/hello/miolab) を確認
+
+  <img width="709" alt="" src="https://user-images.githubusercontent.com/33124627/88742821-254b5580-d17e-11ea-9897-89ca308b63fd.png">
+
+- ルーティングを確認
+
+  ```elixir
+  $ mix phx.routes
+
+            page_path  GET  /                                      PhxHelloWeb.PageController :index
+          hello_path  GET  /hello                                 PhxHelloWeb.HelloController :index
+          hello_path  GET  /hello/:messenger                      PhxHelloWeb.HelloController :show
+  live_dashboard_path  GET  /dashboard                             Phoenix.LiveView.Plug :home
+  live_dashboard_path  GET  /dashboard/:node/home                  Phoenix.LiveView.Plug :home
+  live_dashboard_path  GET  /dashboard/:node/os_mon                Phoenix.LiveView.Plug :os_mon
+  live_dashboard_path  GET  /dashboard/:node/metrics               Phoenix.LiveView.Plug :metrics
+  live_dashboard_path  GET  /dashboard/:node/applications          Phoenix.LiveView.Plug :applications
+  live_dashboard_path  GET  /dashboard/:node/processes             Phoenix.LiveView.Plug :processes
+  live_dashboard_path  GET  /dashboard/:node/ports                 Phoenix.LiveView.Plug :ports
+  live_dashboard_path  GET  /dashboard/:node/sockets               Phoenix.LiveView.Plug :sockets
+  live_dashboard_path  GET  /dashboard/:node/ets                   Phoenix.LiveView.Plug :ets
+  live_dashboard_path  GET  /dashboard/:node/request_logger        Phoenix.LiveView.Plug :request_logger
+  live_dashboard_path  GET  /dashboard/:node/:page                 Phoenix.LiveView.Plug :page
+            websocket  WS   /live/websocket                        Phoenix.LiveView.Socket
+            longpoll  GET  /live/longpoll                         Phoenix.LiveView.Socket
+            longpoll  POST  /live/longpoll                         Phoenix.LiveView.Socket
+            websocket  WS   /socket/websocket                      PhxHelloWeb.UserSocket
+  ```
+
+  - `/hello/:messenger` でルートが作成されていることが確認できました↓↓↓
+
+    ```
+    hello_path  GET  /hello/:messenger                      PhxHelloWeb.HelloController :show
+    ```
+
+---
+
 To start your Phoenix server:
 
 - Install dependencies with `mix deps.get`

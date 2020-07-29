@@ -1,0 +1,3 @@
+<section class="phx-hero">
+  <h2>Hello im, from messenger <%= @messenger %>!</h2>
+</section>
