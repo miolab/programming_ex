@@ -340,9 +340,9 @@ Phoenix
 
 ## :computer: [Ecto](https://hexdocs.pm/phoenix/ecto.html#content)
 
-- デフォルトのDB接続設定を確認
+### デフォルトのDB接続設定を確認
 
-  `config/dev.exs`
+- `config/dev.exs`
 
   ```elixir
   use Mix.Config
@@ -371,6 +371,113 @@ Phoenix
   .
   .
   ```
+
+### スキーマ作成 ~ マイグレーション実行
+
+- `phx.gen.schema` タスクを使い、`User` という名前で __Ectoスキーマ__ を生成します
+
+  ```elixir
+  $ mix phx.gen.schema6 User users name:string email:string bio:string number_of_pets:integer
+
+  * creating lib/phx_hello/user.ex
+  * creating priv/repo/migrations/20200730001324_create_users.exs
+
+  Remember to update your repository by running migrations:
+
+      $ mix ecto.migrate
+
+  ```
+
+- __マイグレーション__ 実行
+
+  ```terminal
+  $ mix ecto.migrate
+
+  Compiling 1 file (.ex)
+  Generated phx_hello app
+
+  09:17:46.404 [info]  == Running 20200730001324 PhxHello.Repo.Migrations.CreateUsers.change/0 forward
+
+  09:17:46.406 [info]  create table users
+
+  09:17:46.449 [info]  == Migrated 20200730001324 in 0.0s
+  ```
+
+  - これにより、`priv/repo/migrations/20200730001324_create_users.exs` マイグレーションファイルが、以下内容で生成されました
+
+    ```elixir
+    defmodule PhxHello.Repo.Migrations.CreateUsers do
+      use Ecto.Migration
+
+      def change do
+        create table(:users) do
+          add :name, :string
+          add :email, :string
+          add :bio, :string
+          add :number_of_pets, :integer
+
+          timestamps()
+        end
+
+      end
+    end
+    ```
+
+- PostgreSQL側でDBテーブルを確認
+
+  ```postgres
+  $ psql -l
+                                      List of databases
+          Name         |  Owner   | Encoding |   Collate   |    Ctype    | Access privileges 
+  ----------------------+----------+----------+-------------+-------------+-------------------
+    .
+    .
+  phx_hello_dev        | postgres | UTF8     | ja_JP.UTF-8 | ja_JP.UTF-8 | 
+  postgres             | im       | UTF8     | ja_JP.UTF-8 | ja_JP.UTF-8 | 
+    .
+    .
+  (13 rows)
+  ```
+
+  ```postgres
+  $ psql phx_hello_dev
+  psql (12.2)
+  Type "help" for help.
+  ```
+
+  ```postgres
+  phx_hello_dev=# \d
+                  List of relations
+  Schema |       Name        |   Type   |  Owner   
+  --------+-------------------+----------+----------
+  public | schema_migrations | table    | postgres
+  public | users             | table    | postgres
+  public | users_id_seq      | sequence | postgres
+  (3 rows)
+  ```
+
+  ```postgres
+  phx_hello_dev=# \d users
+                                              Table "public.users"
+      Column     |              Type              | Collation | Nullable |              Default              
+  ----------------+--------------------------------+-----------+----------+-----------------------------------
+  id             | bigint                         |           | not null | nextval('users_id_seq'::regclass)
+  name           | character varying(255)         |           |          | 
+  email          | character varying(255)         |           |          | 
+  bio            | character varying(255)         |           |          | 
+  number_of_pets | integer                        |           |          | 
+  inserted_at    | timestamp(0) without time zone |           | not null | 
+  updated_at     | timestamp(0) without time zone |           | not null | 
+  Indexes:
+      "users_pkey" PRIMARY KEY, btree (id)
+  ```
+
+  - ↑ の通り、`$ mix phx.gen.schema6 User users name:string email:string bio:string number_of_pets:integer` で指定したカラムが作成されています
+
+  ```postgres
+  phx_hello_dev=# \q
+  ```
+
 
 
 ---
