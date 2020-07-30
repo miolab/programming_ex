@@ -340,6 +340,39 @@ Phoenix
 
 ## :computer: [Ecto](https://hexdocs.pm/phoenix/ecto.html#content)
 
+- デフォルトのDB接続設定を確認
+
+  `config/dev.exs`
+
+  ```elixir
+  use Mix.Config
+
+  # Configure your database
+  config :phx_hello, PhxHello.Repo,
+    username: "postgres",
+    password: "postgres",
+    database: "phx_hello_dev",
+    hostname: "localhost",
+    show_sensitive_data_on_connection_error: true,
+    pool_size: 10
+
+  # For development, we disable any cache and enable
+  # debugging and code reloading.
+  #
+  # The watchers configuration can be used to run external
+  # watchers to your application. For example, we use it
+  # with webpack to recompile .js and .css sources.
+  config :phx_hello, PhxHelloWeb.Endpoint,
+    http: [port: 4000],
+    debug_errors: true,
+    code_reloader: true,
+    check_origin: false,
+  .
+  .
+  .
+  ```
+
+
 ---
 
 ## []()
