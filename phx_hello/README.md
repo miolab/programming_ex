@@ -507,6 +507,28 @@ Phoenix
 
 ## :computer: [Contexts](https://hexdocs.pm/phoenix/contexts.html#content)
 
+### 事前準備
+
+- 前回つくったuserスキーマを削除
+
+  ```terminal
+  $ rm lib/phx_hello/user.ex
+
+  $ rm priv/repo/migrations/20200730001324_create_users.exs
+  ```
+
+- データベースをリセットする
+
+  `phx.server` を停止させてから、
+
+  ```elixir
+  $ mix ecto.reset
+
+  The database for PhxHello.Repo has been dropped
+  The database for PhxHello.Repo has been created
+
+  13:16:49.825 [info]  Already up
+  ```
 
 
 ---
