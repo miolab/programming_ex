@@ -299,19 +299,8 @@ Phoenix
           hello_path  GET  /hello/:messenger                      PhxHelloWeb.HelloController :show
   live_dashboard_path  GET  /dashboard                             Phoenix.LiveView.Plug :home
   live_dashboard_path  GET  /dashboard/:node/home                  Phoenix.LiveView.Plug :home
-  live_dashboard_path  GET  /dashboard/:node/os_mon                Phoenix.LiveView.Plug :os_mon
-  live_dashboard_path  GET  /dashboard/:node/metrics               Phoenix.LiveView.Plug :metrics
-  live_dashboard_path  GET  /dashboard/:node/applications          Phoenix.LiveView.Plug :applications
-  live_dashboard_path  GET  /dashboard/:node/processes             Phoenix.LiveView.Plug :processes
-  live_dashboard_path  GET  /dashboard/:node/ports                 Phoenix.LiveView.Plug :ports
-  live_dashboard_path  GET  /dashboard/:node/sockets               Phoenix.LiveView.Plug :sockets
-  live_dashboard_path  GET  /dashboard/:node/ets                   Phoenix.LiveView.Plug :ets
-  live_dashboard_path  GET  /dashboard/:node/request_logger        Phoenix.LiveView.Plug :request_logger
-  live_dashboard_path  GET  /dashboard/:node/:page                 Phoenix.LiveView.Plug :page
-            websocket  WS   /live/websocket                        Phoenix.LiveView.Socket
-            longpoll  GET  /live/longpoll                         Phoenix.LiveView.Socket
-            longpoll  POST  /live/longpoll                         Phoenix.LiveView.Socket
-            websocket  WS   /socket/websocket                      PhxHelloWeb.UserSocket
+      .
+      .
   ```
 
   - `/hello/:messenger` でルートが作成されていることが確認できました↓↓↓
@@ -367,9 +356,9 @@ Phoenix
     debug_errors: true,
     code_reloader: true,
     check_origin: false,
-  .
-  .
-  .
+      .
+      .
+      .
   ```
 
 ### スキーマ作成 ~ マイグレーション実行
@@ -529,6 +518,120 @@ Phoenix
 
   13:16:49.825 [info]  Already up
   ```
+
+- `mix phx.gen.html` で、アカウントコンテキストを作成
+
+  ```elixir
+
+  $ mix phx.gen.html Accounts User users name:string username:string:unique
+
+  * creating lib/phx_hello_web/controllers/user_controller.ex
+  * creating lib/phx_hello_web/templates/user/edit.html.eex
+  * creating lib/phx_hello_web/templates/user/form.html.eex
+  * creating lib/phx_hello_web/templates/user/index.html.eex
+  * creating lib/phx_hello_web/templates/user/new.html.eex
+  * creating lib/phx_hello_web/templates/user/show.html.eex
+  * creating lib/phx_hello_web/views/user_view.ex
+  * creating test/phx_hello_web/controllers/user_controller_test.exs
+  * creating lib/phx_hello/accounts/user.ex
+  * creating priv/repo/migrations/20200731101202_create_users.exs
+  * creating lib/phx_hello/accounts.ex
+  * injecting lib/phx_hello/accounts.ex
+  * creating test/phx_hello/accounts_test.exs
+  * injecting test/phx_hello/accounts_test.exs
+
+  Add the resource to your browser scope in lib/phx_hello_web/router.ex:
+
+      resources "/users", UserController
+
+
+  Remember to update your repository by running migrations:
+
+      $ mix ecto.migrate
+
+  ```
+
+- コンソール出力メッセージにしたがい、`lib/phx_hello_web/router.ex` を以下のように修正
+
+  ```elixir
+  scope "/", PhxHelloWeb do
+    pipe_through :browser
+
+    get "/", PageController, :index
+    get "/hello", HelloController, :index
+    get "/hello/:messenger", HelloController, :show
+
+    resources "/users", UserController    # -> add
+  end
+  ```
+
+- マイグレーション
+
+  ```elixir
+  $ mix ecto.migrate
+
+  Compiling 5 files (.ex)
+  Generated phx_hello app
+
+  19:15:44.767 [info]  == Running 20200731101202 PhxHello.Repo.Migrations.CreateUsers.change/0 forward
+
+  19:15:44.769 [info]  create table users
+
+  19:15:44.786 [info]  create index users_username_index
+
+  19:15:44.790 [info]  == Migrated 20200731101202 in 0.0s
+  ```
+
+- ルーティングを確認
+
+  ```elixir
+  $ mix phx.routes
+
+            page_path  GET     /                                      PhxHelloWeb.PageController :index
+          hello_path  GET     /hello                                 PhxHelloWeb.HelloController :index
+          hello_path  GET     /hello/:messenger                      PhxHelloWeb.HelloController :show
+            user_path  GET     /users                                 PhxHelloWeb.UserController :index
+            user_path  GET     /users/:id/edit                        PhxHelloWeb.UserController :edit
+            user_path  GET     /users/new                             PhxHelloWeb.UserController :new
+            user_path  GET     /users/:id                             PhxHelloWeb.UserController :show
+            user_path  POST    /users                                 PhxHelloWeb.UserController :create
+            user_path  PATCH   /users/:id                             PhxHelloWeb.UserController :update
+                      PUT     /users/:id                             PhxHelloWeb.UserController :update
+            user_path  DELETE  /users/:id                             PhxHelloWeb.UserController :delete
+  live_dashboard_path  GET     /dashboard                             Phoenix.LiveView.Plug :home
+      .
+      .
+      .
+  ```
+
+  - `/users` パスが生成されていることが確認できました
+
+- サーバー起動し、[http://localhost:4000/users](http://localhost:4000/users) を確認
+
+  ![スクリーンショット 2020-07-31 19 34 46](https://user-images.githubusercontent.com/33124627/89027144-f6db9f00-d364-11ea-9b8a-dc0ca9367572.png)
+
+- `New User` をクリック
+
+  ![スクリーンショット 2020-07-31 19 41 00](https://user-images.githubusercontent.com/33124627/89027635-cb0ce900-d365-11ea-93ce-c1fa7f7f8dc6.png)
+
+  - 未入力のまま `SAVE` クリックすると、きちんとエラーになる
+
+    ![スクリーンショット 2020-07-31 19 43 11](https://user-images.githubusercontent.com/33124627/89028027-859ceb80-d366-11ea-981c-59fd8b1a1358.png)
+
+- `Name` を _im miolab_、`Username` を _im_ と入力して、`SAVE` クリック
+
+  ![スクリーンショット 2020-07-31 19 44 08](https://user-images.githubusercontent.com/33124627/89028049-9188ad80-d366-11ea-99ce-fa74acc08adf.png)
+
+  - user登録されました
+
+- 何名かをあらたに `New User` 登録したら、  
+  `Back` で `http://localhost:4000/users` に戻り、一覧を確認します
+
+  ![スクリーンショット 2020-07-31 19 57 22](https://user-images.githubusercontent.com/33124627/89028964-54251f80-d368-11ea-9421-6674c89d085c.png)
+
+  - `Show`、`Edit`、`Delete` もそろっており、基本的な __CRUD__ 操作が可能です
+
+
 
 
 ---
