@@ -519,6 +519,8 @@ Phoenix
   13:16:49.825 [info]  Already up
   ```
 
+### `Accounts` コンテキストを作成
+
 - `mix phx.gen.html` で、アカウントコンテキストを作成
 
   ```elixir
@@ -630,6 +632,87 @@ Phoenix
   ![スクリーンショット 2020-07-31 19 57 22](https://user-images.githubusercontent.com/33124627/89028964-54251f80-d368-11ea-9421-6674c89d085c.png)
 
   - `Show`、`Edit`、`Delete` もそろっており、基本的な __CRUD__ 操作が可能です
+
+### `phx.gen.html` コマンド補足（生成コントローラ）
+
+- 生成されたコントローラ `lib/phx_hello_web/controllers/user_controller.ex` の内容を確認してみます
+
+  ```elixir
+  defmodule PhxHelloWeb.UserController do
+    use PhxHelloWeb, :controller
+
+    alias PhxHello.Accounts
+    alias PhxHello.Accounts.User
+
+    def index(conn, _params) do
+      users = Accounts.list_users()
+      render(conn, "index.html", users: users)
+    end
+
+    def new(conn, _params) do
+      changeset = Accounts.change_user(%User{})
+      render(conn, "new.html", changeset: changeset)
+    end
+
+    def create(conn, %{"user" => user_params}) do
+      case Accounts.create_user(user_params) do
+        {:ok, user} ->
+          conn
+          |> put_flash(:info, "User created successfully.")
+          |> redirect(to: Routes.user_path(conn, :show, user))
+
+        {:error, %Ecto.Changeset{} = changeset} ->
+          render(conn, "new.html", changeset: changeset)
+      end
+    end
+
+    def show(conn, %{"id" => id}) do
+      user = Accounts.get_user!(id)
+      render(conn, "show.html", user: user)
+    end
+
+    def edit(conn, %{"id" => id}) do
+      user = Accounts.get_user!(id)
+      changeset = Accounts.change_user(user)
+      render(conn, "edit.html", user: user, changeset: changeset)
+    end
+
+    def update(conn, %{"id" => id, "user" => user_params}) do
+      user = Accounts.get_user!(id)
+
+      case Accounts.update_user(user, user_params) do
+        {:ok, user} ->
+          conn
+          |> put_flash(:info, "User updated successfully.")
+          |> redirect(to: Routes.user_path(conn, :show, user))
+
+        {:error, %Ecto.Changeset{} = changeset} ->
+          render(conn, "edit.html", user: user, changeset: changeset)
+      end
+    end
+
+    def delete(conn, %{"id" => id}) do
+      user = Accounts.get_user!(id)
+      {:ok, _user} = Accounts.delete_user(user)
+
+      conn
+      |> put_flash(:info, "User deleted successfully.")
+      |> redirect(to: Routes.user_path(conn, :index))
+    end
+  end
+  ```
+
+  - `put_flash` で UI操作での成功メッセージ表示をしています
+
+  - こちらの部分で、表示メッセージ内容を変更可能
+
+    ```elixir
+      |> put_flash(:info, "オーケー！ User updated successfully.")
+    ```
+
+    <img width="631" alt="" src="https://user-images.githubusercontent.com/33124627/89092251-0a314d80-d3eb-11ea-9e29-122ece07efbc.png">
+
+### 
 
 
 
