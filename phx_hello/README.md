@@ -712,8 +712,39 @@ Phoenix
 
     <img width="631" alt="" src="https://user-images.githubusercontent.com/33124627/89092251-0a314d80-d3eb-11ea-9e29-122ece07efbc.png">
 
-### 
+### コンテキスト内のリレーション（クレデンシャル）
 
+クレデンシャル設定
+
+```elixir
+$ mix phx.gen.context Accounts Credential credentials email:string:unique user_id:references:users
+
+You are generating into an existing context.
+
+The PhxHello.Accounts context currently has 6 functions and 1 files in its directory.
+
+  * It's OK to have multiple resources in the same context as long as they are closely related. But if a context grows too large, consider breaking it apart
+
+  * If they are not closely related, another context probably works better
+
+The fact two entities are related in the database does not mean they belong to the same context.
+
+If you are not sure, prefer creating a new context over adding to the existing one.
+
+Would you like to proceed? [Yn] y
+* creating lib/phx_hello/accounts/credential.ex
+* creating priv/repo/migrations/20200803101847_create_credentials.exs
+* injecting lib/phx_hello/accounts.ex
+* injecting test/phx_hello/accounts_test.exs
+
+Remember to update your repository by running migrations:
+
+    $ mix ecto.migrate
+
+```
+
+- `$ mix phx.gen.context` は、`$ mix phx.gen.html` と異なり、Webファイルを生成しない
+- 最初の `$ mix phx.gen.html` で、すでにコントローラとテンプレートを作成済みのため、これに `$ mix phx.gen.context` でクレデンシャル機能を追加する方針
 
 
 
