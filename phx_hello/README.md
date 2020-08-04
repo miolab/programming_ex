@@ -712,39 +712,243 @@ Phoenix
 
     <img width="631" alt="" src="https://user-images.githubusercontent.com/33124627/89092251-0a314d80-d3eb-11ea-9e29-122ece07efbc.png">
 
-### コンテキスト内のリレーション（クレデンシャル）
+### コンテキスト内の関連付け（クレデンシャル）
 
-クレデンシャル設定
+- クレデンシャル設定
 
-```elixir
-$ mix phx.gen.context Accounts Credential credentials email:string:unique user_id:references:users
+  ```elixir
+  $ mix phx.gen.context Accounts Credential credentials email:string:unique user_id:references:users
 
-You are generating into an existing context.
+  You are generating into an existing context.
 
-The PhxHello.Accounts context currently has 6 functions and 1 files in its directory.
+  The PhxHello.Accounts context currently has 6 functions and 1 files in its directory.
 
-  * It's OK to have multiple resources in the same context as long as they are closely related. But if a context grows too large, consider breaking it apart
+    * It's OK to have multiple resources in the same context as long as they are closely related. But if a context grows too large, consider breaking it apart
 
-  * If they are not closely related, another context probably works better
+    * If they are not closely related, another context probably works better
 
-The fact two entities are related in the database does not mean they belong to the same context.
+  The fact two entities are related in the database does not mean they belong to the same context.
 
-If you are not sure, prefer creating a new context over adding to the existing one.
+  If you are not sure, prefer creating a new context over adding to the existing one.
 
-Would you like to proceed? [Yn] y
-* creating lib/phx_hello/accounts/credential.ex
-* creating priv/repo/migrations/20200803101847_create_credentials.exs
-* injecting lib/phx_hello/accounts.ex
-* injecting test/phx_hello/accounts_test.exs
+  Would you like to proceed? [Yn] y
+  * creating lib/phx_hello/accounts/credential.ex
+  * creating priv/repo/migrations/20200803101847_create_credentials.exs
+  * injecting lib/phx_hello/accounts.ex
+  * injecting test/phx_hello/accounts_test.exs
 
-Remember to update your repository by running migrations:
+  Remember to update your repository by running migrations:
 
-    $ mix ecto.migrate
+      $ mix ecto.migrate
 
-```
+  ```
 
-- `$ mix phx.gen.context` は、`$ mix phx.gen.html` と異なり、Webファイルを生成しない
-- 最初の `$ mix phx.gen.html` で、すでにコントローラとテンプレートを作成済みのため、これに `$ mix phx.gen.context` でクレデンシャル機能を追加する方針
+  - `$ mix phx.gen.context` は、`$ mix phx.gen.html` と異なり、Webファイルを生成しない
+
+  - 最初の `$ mix phx.gen.html` で、すでにコントローラとテンプレートを作成済みであるため、ここから `$ mix phx.gen.context` でクレデンシャル機能を追加する方針
+
+- `priv/repo/migrations/20200803101847_create_credentials.exs`
+
+  内容を一部変更し、__親ユーザーの削除時にユーザーのクレデンシャルも削除__ されるよう修正
+
+  ```elixir
+  defmodule PhxHello.Repo.Migrations.CreateCredentials do
+    use Ecto.Migration
+
+    def change do
+      create table(:credentials) do
+        add :email, :string
+        add :user_id, references(:users, on_delete: :delete_all), null: false    # -> update
+
+    .
+    .
+  ```
+
+  - `null: false` は、既存ユーザーがない場合にクレデンシャルを生成できないようにする制約
+
+- マイグレーション
+
+  ```elixir
+  $ mix ecto.migrate
+
+  Compiling 2 files (.ex)
+  Generated phx_hello app
+
+  19:33:01.385 [info]  == Running 20200803101847 PhxHello.Repo.Migrations.CreateCredentials.change/0 forward
+
+  19:33:01.387 [info]  create table credentials
+
+  19:33:01.431 [info]  create index credentials_email_index
+
+  19:33:01.433 [info]  create index credentials_user_id_index
+
+  19:33:01.436 [info]  == Migrated 20200803101847 in 0.0s
+  ```
+
+- `lib/phx_hello/accounts/user.ex`
+
+  Accountsコンテキストに対し、__ユーザーとクレデンシャルの関連付け方__ をわたす
+
+  ```elixir
+  defmodule PhxHello.Accounts.User do
+    use Ecto.Schema
+    import Ecto.Changeset
+
+    alias PhxHello.Accounts.Credential    # -> add
+
+    schema "users" do
+      field :name, :string
+      field :username, :string
+      has_one :credential, Credential    # -> add
+
+      timestamps()
+    end
+  ```
+
+  - `has_one` で、リレーションの親である _users_ と、子のクレデンシャルの関連付け方をEctoに渡しました
+
+- `accounts/credential.ex`
+
+  先ほどの実装と対となる関連付けを追加
+
+  ```elixir
+  defmodule PhxHello.Accounts.Credential do
+    use Ecto.Schema
+    import Ecto.Changeset
+
+    alias PhxHello.Accounts.User    # -> add
+
+    schema "credentials" do
+      field :email, :string
+      # field :user_id, :id    # -> delete
+      belongs_to :user, User    # -> add
+
+      timestamps()
+    end
+  ```
+
+  - `belongs_to` で、子リレーションを親である _User_ にマッピングしました
+
+- `lib/phx_hello/accounts.ex`
+
+  ```elixir
+  defmodule PhxHello.Accounts do
+    @moduledoc """
+    The Accounts context.
+    """
+
+    import Ecto.Query, warn: false
+    alias PhxHello.Repo
+
+    alias PhxHello.Accounts.{User, Credential}    # -> update
+
+      .
+      .
+
+    # update next def block
+    def list_users do
+      User
+      |> Repo.all()
+      |> Repo.preload(:credential)
+    end
+
+      .
+      .
+
+    # update next def block
+    def get_user!(id) do
+      User
+      |> Repo.get!(id)
+      |> Repo.preload(:credential)
+    end
+  ```
+
+  - ↑ それぞれ `|> Repo.preload(:credential)` を追加実装したことで、ユーザーを取得するタイミングでクレデンシャルをプリロードするよう修正した
+
+  ```elixir
+      .
+      .
+
+    def create_user(attrs \\ %{}) do
+      %User{}
+      |> User.changeset(attrs)
+      |> Ecto.Changeset.cast_assoc(:credential, with: &Credential.changeset/2)    # -> add
+      |> Repo.insert()
+    end
+
+      .
+      .
+
+    def update_user(%User{} = user, attrs) do
+      user
+      |> User.changeset(attrs)
+      |> Ecto.Changeset.cast_assoc(:credential, with: &Credential.changeset/2)    # -> add
+      |> Repo.update()
+    end
+
+      .
+      .
+
+    # alias PhxHello.Accounts.Credential    # -> delete
+
+    @doc """
+    Returns the list of credentials.
+
+  ```
+
+  - ↑ `Ecto.Changeset` を再構築
+
+- `lib/phx_hello_web/templates/user/form.html.eex`
+
+  親フォームに入力フィールド（`Email` 用）を追加します
+
+  ```elixir
+    <div>
+      <%# add next div block %>
+      <div class="form-group">
+        <%= inputs_for f, :credential, fn cf -> %>
+          <%= label cf, :email %>
+          <%= text_input cf, :email %>
+          <%= error_tag cf, :email %>
+        <% end %>
+      </div>
+
+      <%= submit "Save" %>
+    </div>
+  <% end %>
+  ```
+
+- `lib/phx_hello_web/templates/user/show.html.eex`
+
+  ユーザー `show` テンプレートにEmailを表示するよう、以下実装
+
+  ```html
+    <%# add next li block %>
+
+    <li>
+      <strong>Email:</strong>
+      <%= @user.credential.email %>
+    </li>
+
+  </ul>
+  ```
+
+#### 表示確認
+
+- [http://localhost:4000/users/new](http://localhost:4000/users/new)
+
+  <img width="643" alt="" src="https://user-images.githubusercontent.com/33124627/89285898-2b649900-d68c-11ea-95cf-babf92992c30.png">
+
+  - __Emailを入力せずにSAVE__ しようとすると、下記のように __エラーメッセージ__ を出してくれる
+
+    ![スクリーンショット](https://user-images.githubusercontent.com/33124627/89355840-59cb8e00-d6f7-11ea-9944-f589c518b7b4.png)
+
+  - ユーザーshow画面
+
+    以下の通り、項目Email表示が追加されました
+
+    ![スクリーンショット](https://user-images.githubusercontent.com/33124627/89355601-be3a1d80-d6f6-11ea-8d0a-4f555fd4e7b2.png)
+
 
 
 
