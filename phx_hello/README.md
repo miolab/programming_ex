@@ -521,7 +521,9 @@ Phoenix
 
 ### `Accounts` コンテキストを作成
 
-- `mix phx.gen.html` で、アカウントコンテキストを作成
+- `mix phx.gen.html`
+
+  アカウントコンテキストを作成
 
   ```elixir
 
@@ -553,7 +555,9 @@ Phoenix
 
   ```
 
-- コンソール出力メッセージにしたがい、`lib/phx_hello_web/router.ex` を以下のように修正
+- `lib/phx_hello_web/router.ex`
+
+  コンソール出力メッセージにしたがい、以下のように修正
 
   ```elixir
   scope "/", PhxHelloWeb do
@@ -633,6 +637,8 @@ Phoenix
 
   - `Show`、`Edit`、`Delete` もそろっており、基本的な __CRUD__ 操作が可能です
 
+---
+
 ### `phx.gen.html` コマンド補足（生成コントローラ）
 
 - 生成されたコントローラ `lib/phx_hello_web/controllers/user_controller.ex` の内容を確認してみます
@@ -711,6 +717,8 @@ Phoenix
     ```
 
     <img width="631" alt="" src="https://user-images.githubusercontent.com/33124627/89092251-0a314d80-d3eb-11ea-9e29-122ece07efbc.png">
+
+---
 
 ### コンテキスト内の関連付け（クレデンシャル）
 
@@ -948,6 +956,11 @@ Phoenix
     以下の通り、項目Email表示が追加されました
 
     ![スクリーンショット](https://user-images.githubusercontent.com/33124627/89355601-be3a1d80-d6f6-11ea-8d0a-4f555fd4e7b2.png)
+
+---
+
+
+
 
 
 
