@@ -959,6 +959,93 @@ Phoenix
 
 ---
 
+### アカウント関数追加（Emailでのパスワードサインイン）
+
+メールアドレスによる簡易的な __ユーザー認証__ 機能を実装します
+
+- `lib/phx_hello/accounts.ex`  
+  `defmodule` 最下部に、以下を追加
+
+  ```elixir
+  # add next def block
+  @doc """
+  Authenticate by Email password.
+  """
+  def authenticate_by_email_password(email, _password) do
+    query =
+      from u in User,
+        inner_join: c in assoc(u, :credential),
+        where: c.email == ^email
+
+    case Repo.one(query) do
+      %User{} = user -> {:ok, user}
+      nil -> {:error, :unauthorized}
+    end
+  end
+  ```
+
+  - これにより、ユーザーを検索し、入力されたクレデンシャルが有効かどうかを確認します
+
+#### サインインページを実装
+
+- `lib/phx_hello_web/controllers/session_controller.ex`  
+  [ファイルを新規作成](https://github.com/miolab/programming_ex/blob/master/phx_hello/lib/phx_hello_web/controllers/session_controller.ex)（コントローラー）
+
+- `lib/phx_hello_web/router.ex`  
+  セッションのルートを実装
+
+  ```elixir
+  scope "/", PhxHelloWeb do
+    pipe_through :browser
+
+    get "/", PageController, :index
+    get "/hello", HelloController, :index
+    get "/hello/:messenger", HelloController, :show
+
+    resources "/users", UserController
+    resources "/sessions", SessionController, only: [:new, :create, :delete],    # -> add
+                                              singleton: true    # -> add
+  end
+  ```
+
+  つづけて、`defmodule` 最下部に以下追記
+
+  ```elixir
+  # add next defp block
+  defp authenticate_user(conn, _) do
+    case get_session(conn, :user_id) do
+      nil ->
+        conn
+        |> Phoenix.Controller.put_flash(:error, "Login required")
+        |> Phoenix.Controller.redirect(to: "/")
+        |> halt()
+      user_id ->
+        assign(conn, :current_user, PhxHello.Accounts.get_user!(user_id))
+    end
+  end
+  ```
+
+- `lib/phx_hello_web/views/session_view.ex`  
+  [ファイル新規作成](https://github.com/miolab/programming_ex/blob/master/phx_hello/lib/phx_hello_web/views/session_view.ex)（ビュー）
+
+- `lib/phx_hello_web/templates/session/new.html.eex`  
+  [ファイル新規作成](https://github.com/miolab/programming_ex/blob/master/phx_hello/lib/phx_hello_web/templates/session/new.html.eex)（テンプレート）
+
+#### 表示〜機能確認
+
+- [http://localhost:4000/sessions/new](http://localhost:4000/sessions/new)
+
+  ![2020-08-06 19 45 28](https://user-images.githubusercontent.com/33124627/89530054-cd20ed00-d828-11ea-9073-a6713562f1fd.png)
+
+  - 存在しないEmail入力をすると、次のようにエラー表示
+
+    ![スクリーンショット 2020-08-06 19 46 27](https://user-images.githubusercontent.com/33124627/89530069-d4e09180-d828-11ea-8e83-a8681d4707ac.png)
+
+  - 正しいEmailを入力（≒認証クリア）すると、Homeへリダイレクトします
+
+    ![スクリーンショット 2020-08-06 19 46 50](https://user-images.githubusercontent.com/33124627/89530078-d742eb80-d828-11ea-848f-619441448a01.png)
+
+
 
 
 
