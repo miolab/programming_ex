@@ -1031,7 +1031,20 @@ Phoenix
 - `lib/phx_hello_web/templates/session/new.html.eex`  
   [ファイル新規作成](https://github.com/miolab/programming_ex/blob/master/phx_hello/lib/phx_hello_web/templates/session/new.html.eex)（テンプレート）
 
-#### 表示〜機能確認
+#### ルート~表示〜機能確認
+
+- 新たに作られたルート `/sessions` を確認します
+
+  ```elixir
+  $ mix phx.routes
+      .
+      .
+    session_path  GET     /sessions/new          PhxHelloWeb.SessionController :new
+    session_path  POST    /sessions              PhxHelloWeb.SessionController :create
+    session_path  DELETE  /sessions              PhxHelloWeb.SessionController :delete
+      .
+      .
+  ```
 
 - [http://localhost:4000/sessions/new](http://localhost:4000/sessions/new)
 
@@ -1044,6 +1057,53 @@ Phoenix
   - 正しいEmailを入力（≒認証クリア）すると、Homeへリダイレクトします
 
     ![スクリーンショット 2020-08-06 19 46 50](https://user-images.githubusercontent.com/33124627/89530078-d742eb80-d828-11ea-848f-619441448a01.png)
+
+---
+
+### コンテキスト間の依存
+
+コンテンツ管理システム（CMS）を実装します
+
+- `CMS` コンテキストを新規に作成
+
+  ```elixir
+  $ mix phx.gen.html CMS Page pages title:string body:text views:integer --web CMS
+
+  * creating lib/phx_hello_web/controllers/cms/page_controller.ex
+  * creating lib/phx_hello_web/templates/cms/page/edit.html.eex
+  * creating lib/phx_hello_web/templates/cms/page/form.html.eex
+  * creating lib/phx_hello_web/templates/cms/page/index.html.eex
+  * creating lib/phx_hello_web/templates/cms/page/new.html.eex
+  * creating lib/phx_hello_web/templates/cms/page/show.html.eex
+  * creating lib/phx_hello_web/views/cms/page_view.ex
+  * creating test/phx_hello_web/controllers/cms/page_controller_test.exs
+  * creating lib/phx_hello/cms/page.ex
+  * creating priv/repo/migrations/20200808071819_create_pages.exs
+  * creating lib/phx_hello/cms.ex
+  * injecting lib/phx_hello/cms.ex
+  * creating test/phx_hello/cms_test.exs
+  * injecting test/phx_hello/cms_test.exs
+
+  Add the resource to your CMS :browser scope in lib/phx_hello_web/router.ex:
+
+      scope "/cms", PhxHelloWeb.CMS, as: :cms do
+        pipe_through :browser
+        ...
+        resources "/pages", PageController
+      end
+
+
+  Remember to update your repository by running migrations:
+
+      $ mix ecto.migrate
+
+  ```
+
+  - `$ mix phx.gen.html` の __`--web`__ オプション
+
+    コントローラーやビュー等のWebモジュールへ割り当てる名前空間を決めるもの
+
+
 
 
 
