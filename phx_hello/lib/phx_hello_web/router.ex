@@ -29,6 +29,11 @@ defmodule PhxHelloWeb.Router do
   # scope "/api", PhxHelloWeb do
   #   pipe_through :api
   # end
+  scope "/cms", PhxHelloWeb.CMS, as: :cms do
+    pipe_through [:browser, :authenticate_user]
+
+    resources "/pages", PageController
+  end
 
   # Enables LiveDashboard only for development
   #
