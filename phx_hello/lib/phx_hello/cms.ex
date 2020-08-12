@@ -7,6 +7,8 @@ defmodule PhxHello.CMS do
   alias PhxHello.Repo
 
   alias PhxHello.CMS.Page
+  alias PhxHello.CMS.{Page, Author}
+  alias PhxHello.Accounts
 
   @doc """
   Returns the list of pages.
@@ -37,7 +39,7 @@ defmodule PhxHello.CMS do
       ** (Ecto.NoResultsError)
 
   """
-  def get_page!(id)
+  def get_page!(id) do
     Page
     |> Repo.get!(id)
     |> Repo.preload(author: [user: :credential])
@@ -152,7 +154,7 @@ defmodule PhxHello.CMS do
       ** (Ecto.NoResultsError)
 
   """
-  def get_author!(id)
+  def get_author!(id) do
     Author
     |> Repo.get!(id)
     |> Repo.preload(user: :credential)
