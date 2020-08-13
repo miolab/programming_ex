@@ -1060,9 +1060,19 @@ Phoenix
 
 ---
 
-### コンテキスト間の依存
+### コンテキスト間データの依存関係処理
 
-コンテンツ管理システム（CMS）を実装します
+コンテンツ管理システム（__CMS__）を実装します。
+
+#### 機能要件
+
+1. __ページの作成・保存、および更新__
+
+1. __作成されたページ__ と __著者（Author）__ とが紐付けられる
+
+1. __著者情報__ も作成ページ上で表示する
+
+#### 実装
 
 - `CMS` コンテキストを新規に作成
 
@@ -1103,6 +1113,442 @@ Phoenix
 
     コントローラーやビュー等のWebモジュールへ割り当てる名前空間を決めるもの
 
+  - 上記の結果中、以下の部分については後述します
+
+    ```
+    `Add the resource to your CMS :browser scope in lib/phx_hello_web/router.ex:`
+
+    scope "/cms", PhxHelloWeb.CMS, as: :cms do
+      .
+      .
+    ```
+
+- `views` はユーザーが直接更新しないため、属性とパラメータを削除します
+
+  - `lib/phx_hello_web/templates/cms/page/form.html.eex`
+
+    ```elixir
+    <%= label f, :title %>
+    <%= text_input f, :title %>
+    <%= error_tag f, :title %>
+
+    <%= label f, :body %>
+    <%= textarea f, :body %>
+    <%= error_tag f, :body %>
+
+    <%= label f, :views %>    # -> delete
+    <%= number_input f, :views %>    # -> delete
+    <%= error_tag f, :views %>    # -> delete
+    ```
+
+  - `lib/phx_hello/cms/page.ex`
+
+    ```elixir
+    def changeset(page, attrs) do
+      page
+      # # update as next
+      # |> cast(attrs, [:title, :body, :views])
+      |> cast(attrs, [:title, :body])
+      # |> validate_required([:title, :body, :views])
+      |> validate_required([:title, :body])
+    end
+    ```
+
+  - `priv/repo/migrations/20200808071819_create_pages.exs`  
+    `views` にデフォルト値を設定
+
+    ```elixir
+    def change do
+      create table(:pages) do
+        add :title, :string
+        add :body, :text
+        # add :views, :integer    # -> delete
+        add :views, :integer, default: 0    # -> add
+    ```
+
+- `lib/phx_hello_web/router.ex`  
+  前述の、`$ mix phx.gen.html CMS ...` 結果の指示内容（`scope ~ end`）を追記
+
+  ```elixir
+  # Other scopes may use custom stacks.
+  # scope "/api", PhxHelloWeb do
+  #   pipe_through :api
+  # end
+  scope "/cms", PhxHelloWeb.CMS, as: :cms do
+    pipe_through [:browser, :authenticate_user]
+
+    resources "/pages", PageController
+  end
+  ```
+
+- マイグレーション
+
+  ```elixir
+  $ mix ecto.migrate
+
+  Compiling 5 files (.ex)
+  Generated phx_hello app
+
+  13:11:36.046 [info]  == Running 20200808071819 PhxHello.Repo.Migrations.CreatePages.change/0 forward
+
+  13:11:36.048 [info]  create table pages
+
+  13:11:36.083 [info]  == Migrated 20200808071819 in 0.0s
+  ```
+
+- ここまでの結果確認
+
+  （[http://localhost:4000/sessions/new](http://localhost:4000/sessions/new)でログイン認証している状態で）  
+  [http://localhost:4000/cms/pages](http://localhost:4000/cms/pages)
+
+  <img width="670" alt="" src="https://user-images.githubusercontent.com/33124627/90193285-92f2b500-ddff-11ea-8756-b264460b7526.png">
+
+  - `New Page` が追加表示されていることを確認しました
+
+- Authorスキーマを生成する
+
+  ```elixir
+  $ mix phx.gen.context CMS Author authors bio:text role:string genre:string user_id:references:users:unique
+
+  You are generating into an existing context.
+
+  The PhxHello.CMS context currently has 6 functions and 1 files in its directory.
+
+    * It's OK to have multiple resources in the same context as long as they are closely related. But if a context grows too large, consider breaking it apart
+
+    * If they are not closely related, another context probably works better
+
+  The fact two entities are related in the database does not mean they belong to the same context.
+
+  If you are not sure, prefer creating a new context over adding to the existing one.
+
+  Would you like to proceed? [Yn] y
+  * creating lib/phx_hello/cms/author.ex
+  * creating priv/repo/migrations/20200811111208_create_authors.exs
+  * injecting lib/phx_hello/cms.ex
+  * injecting test/phx_hello/cms_test.exs
+
+  Remember to update your repository by running migrations:
+
+      $ mix ecto.migrate
+
+  ```
+
+  - コンテキスト・ジェネレータ `$ mix phx.gen.context` により、コード注入しました
+
+- `priv/repo/migrations/20200811111208_create_authors.exs`  
+  外部キー制約を以下の通り変更
+
+  ```elixir
+  def change do
+    create table(:authors) do
+      add :bio, :text
+      add :role, :string
+      add :genre, :string
+      # add :user_id, references(:users, on_delete: :nothing)  # -> delete
+      add :user_id, references(:users, on_delete: :delete_all),  # -> add
+                    null: false    # -> add
+  ```
+
+  アプリケーションのコードを切り離して、DB側でデータ整合性をとるよう設定しました
+
+- ページテーブルに `author_id` フィールドを追加
+
+  ```elixir
+  $ mix ecto.gen.migration add_author_id_to_pages
+
+  Generated phx_hello app
+  * creating priv/repo/migrations/20200812010458_add_author_id_to_pages.exs
+  ```
+
+- `priv/repo/migrations/20200812010458_add_author_id_to_pages.exs`
+  `def change do ~ end` 内を、以下のように記述
+
+  ```elixir
+  def change do
+    alter table(:pages) do
+      add :author_id, references(:authors, on_delete: :delete_all),
+                      null: false
+    end
+
+    create index(:pages, [:author_id])
+  end
+  ```
+
+  - `on_delete: :delete_all` により、親（Author）が削除されたら、紐付けられたページも削除します
+
+- マイグレーション
+
+  ```elixir
+  $ mix ecto.migrate
+
+  10:08:37.105 [info]  == Running 20200811111208 PhxHello.Repo.Migrations.CreateAuthors.change/0 forward
+
+  10:08:37.107 [info]  create table authors
+
+  10:08:37.127 [info]  create index authors_user_id_index
+
+  10:08:37.132 [info]  == Migrated 20200811111208 in 0.0s
+
+  10:08:37.154 [info]  == Running 20200812010458 PhxHello.Repo.Migrations.AddAuthorIdToPages.change/0 forward
+
+  10:08:37.154 [info]  alter table pages
+
+  10:08:37.155 [info]  create index pages_author_id_index
+
+  10:08:37.156 [info]  == Migrated 20200812010458 in 0.0s
+  ```
+
+  ここまでで、DB準備が整いました
+
+### コンテキスト間データの依存関係処理（続き）
+
+Authorと投稿記事をCMS側に統合します
+
+- ページと作者および、作者とユーザーを結びつけます
+
+  - `lib/phx_hello/cms/page.ex`  
+
+    ```elixir
+    defmodule PhxHello.CMS.Page do
+      use Ecto.Schema
+      import Ecto.Changeset
+
+      alias PhxHello.CMS.Author    # -> add
+
+      schema "pages" do
+        field :body, :string
+        field :title, :string
+        field :views, :integer
+        belongs_to :author, Author    # -> add
+
+        timestamps()
+      end
+    ```
+
+  - `lib/phx_hello/cms/author.ex`
+
+    ```elixir
+    defmodule PhxHello.CMS.Author do
+      use Ecto.Schema
+      import Ecto.Changeset
+
+      alias PhxHello.CMS.Page    # -> add
+
+      schema "authors" do
+        field :bio, :string
+        field :genre, :string
+        field :role, :string
+        # field :user_id, :id    # -> delete
+
+        has_many :pages, Page    # -> add
+        belongs_to :user, PhxHello.Accounts.User    # -> add
+
+        timestamps()
+      end
+    ```
+
+- `lib/phx_hello/cms.ex`
+
+  データ取得方法を変更
+
+  ```elixir
+  # # add and update as belows
+      .
+      .
+  alias PhxHello.CMS.{Page, Author}
+  alias PhxHello.Accounts
+      .
+      .
+  def list_pages do
+    Page
+    |> Repo.all()
+    |> Repo.preload(author: [user: :credential])
+  end
+      .
+      .
+  def get_page!(id) do
+    Page
+    |> Repo.get!(id)
+    |> Repo.preload(author: [user: :credential])
+  end
+      .
+      .
+  def get_author!(id) do
+    Author
+    |> Repo.get!(id)
+    |> Repo.preload(user: :credential)
+  end
+      .
+      .
+  ```
+
+  つづいて、永続化を設定します
+
+  ```elixir
+  # # update as belows
+  def create_page(%Author{} = author, attrs \\ %{}) do
+    %Page{}
+    |> Page.changeset(attrs)
+    |> Ecto.Changeset.put_change(:author_id, author.id)
+    |> Repo.insert()
+  end
+
+  # add belows
+  def ensure_author_exists(%Accounts.User{} = user) do
+    %Author{user_id: user.id}
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.unique_constraint(:user_id)
+    |> Repo.insert()
+    |> handle_existing_author()
+  end
+
+  defp handle_existing_author({:ok, author}), do: author
+
+  defp handle_existing_author({:error, changeset}) do
+    Repo.get_by!(Author, user_id: changeset.data.user_id)
+  end
+  ```
+
+- Webレイヤー側更新
+
+  - `lib/phx_hello_web/controllers/cms/page_controller.ex`
+
+    ```elixir
+    defmodule PhxHelloWeb.CMS.PageController do
+      use PhxHelloWeb, :controller
+
+      alias PhxHello.CMS
+      alias PhxHello.CMS.Page
+
+      plug :require_existing_author    # -> add
+      plug :authorize_page when action in [:edit, :update, :delete]    # -> add
+
+      .
+      .
+
+      # add belows (into defmodule's last area)
+      defp require_existing_author(conn, _) do
+        author = CMS.ensure_author_exists(conn.assigns.current_user)
+        assign(conn, :current_author, author)
+      end
+
+      defp authorize_page(conn, _) do
+        page = CMS.get_page!(conn.params["id"])
+
+        if conn.assigns.current_author.id == page.author_id do
+          assign(conn, :page, page)
+        else
+          conn
+          |> put_flash(:error, "You can't modify that page")
+          |> redirect(to: Routes.cms_page_path(conn, :index))
+          |> halt()
+        end
+      end
+    end
+    ```
+
+    つづけて、
+
+    ```elixir
+      .
+      .
+    # # update as belows
+    def create(conn, %{"page" => page_params}) do
+      case CMS.create_page(conn.assigns.current_author, page_params) do
+        {:ok, page} ->
+          conn
+          |> put_flash(:info, "Page created successfully.")
+          |> redirect(to: Routes.cms_page_path(conn, :show, page))
+
+        {:error, %Ecto.Changeset{} = changeset} ->
+          render(conn, "new.html", changeset: changeset)
+      end
+    end
+      .
+      .
+    # # update as belows
+    def edit(conn, _) do
+      changeset = CMS.change_page(conn.assigns.page)
+      render(conn, "edit.html", changeset: changeset)
+    end
+
+    # # update as belows
+    def update(conn, %{"page" => page_params}) do
+      case CMS.update_page(conn.assigns.page, page_params) do
+        {:ok, page} ->
+          conn
+          |> put_flash(:info, "Page updated successfully.")
+          |> redirect(to: Routes.cms_page_path(conn, :show, page))
+
+        {:error, %Ecto.Changeset{} = changeset} ->
+          render(conn, "edit.html", changeset: changeset)
+      end
+    end
+
+    # # update as belows
+    def delete(conn, _) do
+      {:ok, _page} = CMS.delete_page(conn.assigns.page)
+
+      conn
+      |> put_flash(:info, "Page deleted successfully.")
+      |> redirect(to: Routes.cms_page_path(conn, :index))
+    end
+    ```
+
+- 表示されたページにAuthorを載せます
+
+  - `lib/phx_hello_web/views/cms/page_view.ex`  
+
+    ```elixir
+    defmodule PhxHelloWeb.CMS.PageView do
+      use PhxHelloWeb, :view
+
+      # add: alias and def ~ end block
+      alias PhxHello.CMS
+
+      def author_name(%CMS.Page{author: author}) do
+        author.user.name
+      end
+    end
+    ```
+
+  - `lib/phx_hello_web/templates/cms/page/show.html.eex`
+
+    ```html
+      # add next li block
+      <li>
+        <strong>Author:</strong>
+        <%= author_name(@page) %>
+      </li>
+    </ul>
+    ```
+
+#### ページ確認
+
+- [http://localhost:4000/cms/pages/new](http://localhost:4000/cms/pages/new)
+
+  ![スクリーンショット 2020-08-13 7 40 24](https://user-images.githubusercontent.com/33124627/90078269-51023a00-dd3f-11ea-99cb-70a2a3fbb834.png)
+
+- SAVE後の画面↓で、著者情報が表示されるようになりました
+
+  ![スクリーンショット 2020-08-13 7 41 23](https://user-images.githubusercontent.com/33124627/90078282-5bbccf00-dd3f-11ea-8c32-1e60d5dd3a55.png)
+
+---
+
+### CMSの関数追加
+
+- ``
+
+```elixir
+```
+
+
+
+- ``
+
+```elixir
+```
 
 
 
