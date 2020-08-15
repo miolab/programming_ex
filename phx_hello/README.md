@@ -1536,7 +1536,55 @@ Authorと投稿記事をCMS側に統合します
 
 ---
 
-### CMSの関数追加
+### CMSの関数追加（ページ閲覧回数の表示）
+
+ページ閲覧回数を表示する機能を追加実装します
+
+- `lib/phx_hello/cms.ex`
+
+  ```elixir
+  # add belows (into defmodule last area)
+  @doc """
+  """
+  def inc_page_views(%Page{} = page) do
+    {1, [%Page{views: views}]} =
+      from(p in Page, where: p.id == ^page.id, select: [:views])
+      |> Repo.update_all(inc: [views: 1])
+
+    put_in(page.views, views)
+  end
+  ```
+
+  - 指定したページIDを `Repo.update_all` に渡すクエリを作成
+
+- `lib/phx_hello_web/controllers/cms/page_controller.ex`
+
+  ```elixir
+  def show(conn, %{"id" => id}) do
+    # # update as belows
+    # page = CMS.get_page!(id)    # -> delete
+    page =
+      id
+      |> CMS.get_page!()
+      |> CMS.inc_page_views()
+
+    render(conn, "show.html", page: page)
+  end
+  ```
+
+  - `|> CMS.inc_page_views()` により、更新されたページを返すように変更しています
+
+#### ページ確認
+
+- [http://localhost:4000/cms/pages](http://localhost:4000/cms/pages)
+
+  <img width="633" alt="" src="https://user-images.githubusercontent.com/33124627/90308269-09cfa100-df19-11ea-8003-4c91c1456a2d.png">
+
+  - 閲覧回数 `Views` 表示機能を追加しました
+
+
+
+
 
 - ``
 
@@ -1545,12 +1593,27 @@ Authorと投稿記事をCMS側に統合します
 
 
 
+
 - ``
 
 ```elixir
 ```
 
 
+
+
+- ``
+
+```elixir
+```
+
+
+
+
+- ``
+
+```elixir
+```
 
 
 
