@@ -366,7 +366,7 @@ Phoenix
 - `phx.gen.schema` タスクを使い、`User` という名前で __Ectoスキーマ__ を生成します
 
   ```elixir
-  $ mix phx.gen.schema6 User users name:string email:string bio:string number_of_pets:integer
+  $ mix phx.gen.schema User users name:string email:string bio:string number_of_pets:integer
 
   * creating lib/phx_hello/user.ex
   * creating priv/repo/migrations/20200730001324_create_users.exs
