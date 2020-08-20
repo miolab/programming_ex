@@ -1,15 +1,17 @@
 # [Mix Tasks of Phoenix](https://hexdocs.pm/phoenix/mix_tasks.html#content)
 
-コマンド例
+`mix` コマンドについてのチートシート（Phoenix 関係の）
 
-```terminal
-$ mix help | grep -i phx
+- コマンド例
 
-mix local.phx         # Updates the Phoenix project generator locally
-mix phx.new           # Creates a new Phoenix v1.5.4 application
-mix phx.new.ecto      # Creates a new Ecto project within an umbrella project
-mix phx.new.web       # Creates a new Phoenix web project within an umbrella project
-```
+  ```terminal
+  $ mix help | grep -i phx
+
+  mix local.phx         # Updates the Phoenix project generator locally
+  mix phx.new           # Creates a new Phoenix v1.5.4 application
+  mix phx.new.ecto      # Creates a new Ecto project within an umbrella project
+  mix phx.new.web       # Creates a new Phoenix web project within an umbrella project
+  ```
 
 ---
 
@@ -53,9 +55,9 @@ mix phx.new.web       # Creates a new Phoenix web project within an umbrella pro
   - 引数について
 
     1. Blog ... コンテキストのモジュール名
-    1. Post ... スキーマのモジュール名
-    1. posts ... リソース名
-    1. body:string, word_count:integer ... カラム名と型
+    2. Post ... スキーマのモジュール名
+    3. posts ... リソース名
+    4. body:string, word_count:integer ... カラム名と型
 
   - オプション
 
@@ -91,9 +93,9 @@ mix phx.new.web       # Creates a new Phoenix web project within an umbrella pro
   - 引数について
 
     1. Blog ... コンテキストのモジュール名
-    1. Post ... スキーマのモジュール名
-    1. posts ... リソース名
-    1. body:string, word_count:integer ... カラム名と型
+    2. Post ... スキーマのモジュール名
+    3. posts ... リソース名
+    4. body:string, word_count:integer ... カラム名と型
 
   - オプション
 
