@@ -28,7 +28,8 @@ mix phx.new.web       # Creates a new Phoenix web project within an umbrella pro
 
 ## mix phx.gen.html
 
-- HTMLリソースを以下のようにフルセットで生成する
+- HTML リソースを以下のようにフルセットで生成する
+
   - Ecto マイグレーション
   - Ecto コンテキスト
   - 必要となるアクション一式
@@ -43,3 +44,10 @@ mix phx.new.web       # Creates a new Phoenix web project within an umbrella pro
     - Post ... スキーマのモジュール名
     - posts ... リソース名
     - body:string, word_count:integer ... カラム名と型
+
+  | オプション   | 説明                                                       | メモ                                                 |
+  | :----------- | :--------------------------------------------------------- | :--------------------------------------------------- |
+  | --no-context | リソースのコンテキストやスキーマを作成せずプロジェクト生成 | パラメーターの`コンテキストモジュール`引数自体は必要 |
+  | --no-schema  | リソースのスキーマなしでコンテキストを作成                 | パラメーターの`スキーマ`引数自体は必要               |
+
+## mix phx.gen.html
