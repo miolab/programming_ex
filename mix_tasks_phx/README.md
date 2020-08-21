@@ -95,7 +95,7 @@
     1. Blog ... コンテキストのモジュール名
     2. Post ... スキーマのモジュール名
     3. posts ... リソース名
-    4. body:string, word_count:integer ... カラム名と型
+    4. body:string, content:string ... カラム名と型
 
   - オプション
 
@@ -105,5 +105,33 @@
     - --no-schema
 
     が使用可能
+
+---
+
+## mix phx.gen.context
+
+- HTML/JSON リソースのフルセットまでは必要ない場合で、コンテキスト作成を目的とするケースで使用（以下を生成）
+
+  - コンテキスト
+  - スキーマ
+  - マイグレーション
+  - テストケース
+
+- 使い方
+
+  ```
+  mix phx.gen.context Accounts User users name:string age:integer
+  ```
+
+  - 引数について
+
+    1. Accounts ... コンテキストのモジュール名
+    2. User ... スキーマのモジュール名
+    3. users ... リソース名
+    4. name:string, age:integer ... カラム名と型
+
+#### 実装例
+
+- [phx_hello](https://github.com/miolab/programming_ex/tree/master/phx_hello)
 
 ---
