@@ -135,3 +135,25 @@
 - [phx_hello](https://github.com/miolab/programming_ex/tree/master/phx_hello)
 
 ---
+
+## mix phx.gen.schema
+
+- HTML/JSON リソースのフルセットまでは必要なく、コンテキスト作成も必要ないケースで、スキーマとマイグレーションの生成をしたいケースで使用（以下を生成）
+
+- 使い方
+
+  ```
+  mix phx.gen.schema Accounts.Credential credentials email:string:unique user_id:references:users
+  ```
+
+  - 引数について
+
+    1. Accounts.Credential ... スキーマのモジュール名（名前空間を持つこともできる）
+    2. credentials ... リソース名
+    3. email:string:unique user_id:references:users ... カラム名と型
+
+#### 実装例
+
+- [phx_hello](https://github.com/miolab/programming_ex/tree/master/phx_hello)
+
+---
