@@ -152,8 +152,50 @@
     2. credentials ... リソース名
     3. email:string:unique user_id:references:users ... カラム名と型
 
-#### 実装例
+---
 
-- [phx_hello](https://github.com/miolab/programming_ex/tree/master/phx_hello)
+## mix phx.gen.channel
+
+- （まだ使ったことはない）
+
+---
+
+## mix phx.gen.presence
+
+- （まだ使ったことはない）
+
+---
+
+## mix phx.routes
+
+- ルーターで定義したルートをすべて表示する
+
+- 例
+
+  ```elixir
+  $ mix phx.routes
+
+            page_path  GET  /                                      PhxHelloWeb.PageController :index
+          hello_path  GET  /hello                                 PhxHelloWeb.HelloController :index
+  live_dashboard_path  GET  /dashboard                             Phoenix.LiveView.Plug :home
+  live_dashboard_path  GET  /dashboard/:node/home                  Phoenix.LiveView.Plug :home
+  live_dashboard_path  GET  /dashboard/:node/os_mon                Phoenix.LiveView.Plug :os_mon
+  live_dashboard_path  GET  /dashboard/:node/metrics               Phoenix.LiveView.Plug :metrics
+  live_dashboard_path  GET  /dashboard/:node/applications          Phoenix.LiveView.Plug :applications
+  live_dashboard_path  GET  /dashboard/:node/processes             Phoenix.LiveView.Plug :processes
+  live_dashboard_path  GET  /dashboard/:node/ports                 Phoenix.LiveView.Plug :ports
+  live_dashboard_path  GET  /dashboard/:node/sockets               Phoenix.LiveView.Plug :sockets
+  live_dashboard_path  GET  /dashboard/:node/ets                   Phoenix.LiveView.Plug :ets
+  live_dashboard_path  GET  /dashboard/:node/request_logger        Phoenix.LiveView.Plug :request_logger
+  live_dashboard_path  GET  /dashboard/:node/:page                 Phoenix.LiveView.Plug :page
+            websocket  WS   /live/websocket                        Phoenix.LiveView.Socket
+            longpoll  GET  /live/longpoll                         Phoenix.LiveView.Socket
+            longpoll  POST  /live/longpoll                         Phoenix.LiveView.Socket
+            websocket  WS   /socket/websocket                      PhxHelloWeb.UserSocket
+  ```
+
+  - [phx_hello](https://github.com/miolab/programming_ex/tree/master/phx_hello) より抜粋
+
+---
 
 ---
