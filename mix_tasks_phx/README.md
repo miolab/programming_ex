@@ -1,6 +1,10 @@
-# [Mix Tasks of Phoenix](https://hexdocs.pm/phoenix/mix_tasks.html#content)
+# [Mix Tasks](https://hexdocs.pm/phoenix/mix_tasks.html#content)
 
-`mix` コマンドについてのチートシート（Phoenix 関係の）
+`mix` コマンドについてのチートシート
+
+<div style="height: 40px;"></div>
+
+# Phoenix 関係
 
 - コマンド例
 
@@ -195,6 +199,24 @@
   ```
 
   - [phx_hello](https://github.com/miolab/programming_ex/tree/master/phx_hello) より抜粋
+
+---
+
+## mix phx.server
+
+- アプリケーションサーバーを起動
+
+---
+
+## mix phx.digest
+
+- （まだ使ったことはない）
+
+---
+
+<div style="height: 40px;"></div>
+
+# Ecto 関係
 
 ---
 
