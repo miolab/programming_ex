@@ -218,6 +218,97 @@
 
 # Ecto 関係
 
----
+関連リポジトリ [https://github.com/miolab/ecto_postgres](https://github.com/miolab/ecto_postgres)
 
 ---
+
+## mix ecto.create
+
+- `Hoge.Repo` で指定したデータベースを作成する
+
+  - デフォルトでは、アプリケーション名が付いている `Repo` を探す
+
+---
+
+## mix ecto.gen.repo
+
+- データベースの接続と通信を行うために、`Repo` をセットアップする
+
+- 例
+
+  ```elixir
+  $ mix ecto.gen.repo -r Friends.Repo
+
+  ==> connection
+  Compiling 1 file (.ex)
+  Generated connection app
+  ===> Compiling telemetry
+  ==> decimal
+  Compiling 1 file (.ex)
+  Generated decimal app
+  ==> db_connection
+  Compiling 14 files (.ex)
+  Generated db_connection app
+  ==> ecto
+  Compiling 55 files (.ex)
+  Generated ecto app
+  ==> postgrex
+  Compiling 61 files (.ex)
+  Generated postgrex app
+  ==> ecto_sql
+  Compiling 26 files (.ex)
+  Generated ecto_sql app
+  ==> friends
+  * creating lib/friends
+  * creating lib/friends/repo.ex
+  * creating config/config.exs
+  Don't forget to add your new repo to your supervision tree
+  (typically in lib/friends/application.ex):
+
+      {Friends.Repo, []}
+
+  And to add it to the list of ecto repositories in your
+  configuration files (so Ecto tasks work as expected):
+
+      config :friends,
+        ecto_repos: [Friends.Repo]
+  ```
+
+---
+
+## mix ecto.gen.migration
+
+- マイグレーションをつくり、データベース内のテーブル及びインデックスの作成や更新をする仕組みを整える
+
+- 例
+
+  ```elixir
+  $ mix ecto.gen.migration add_author_id_to_pages
+
+  Generated phx_hello app
+  * creating priv/repo/migrations/20200812010458_add_author_id_to_pages.exs
+  ```
+
+---
+
+## mix ecto.migrate
+
+- マイグレーションの準備がすんだあとに、`mix ecto.migrate` を実行することで、変更をデータベースに反映させる
+
+- 例
+
+  ```elixir
+  $ mix ecto.migrate
+
+  08:14:06.052 [info]  == Running 20200517041113 Friends.Repo.Migrations.CreatePeople.change/0 forward
+
+  08:14:06.055 [info]  create table people
+
+  08:14:06.078 [info]  == Migrated 20200517041113 in 0.0s
+  ```
+
+---
+
+## mix ecto.rollback
+
+- `ecto.migrate` を **revert** する
