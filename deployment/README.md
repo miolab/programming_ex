@@ -53,17 +53,21 @@ Phoenix アプリケーションのデプロイに関するチートシート
 
 ---
 
-# [ WIP ]
+---
+
+## **[ WIP ] ->**
 
 ## シークレットデータの取り扱い
 
-```
+```bash
 $ mix phx.gen.secret
 xxxxxxxxxxxxxxxxxxxxxxxx
 
 $ export SECRET_KEY_BASE=xxxxxxxxxxxxxxxxxxxxxxxx
 
 $ export DATABASE_URL=ecto://USER:PASS@HOST/database
+# e.g.
+# export DATABASE_URL="ecto://postgres:postgres@localhost:5432/hello"
 ```
 
 - `config/prod.secret.exs` が、環境変数からシークレットや設定を読み込む
@@ -116,12 +120,32 @@ Generated hello app
 
 ```elixir
 $ npm run deploy --prefix ./assets
+.
+.
 
 $ mix phx.digest
 Check your digested files at "priv/static"
 
 ```
 
+wip
+
 ```elixir
 $ PORT=4001 MIX_ENV=prod mix phx.server
 ```
+
+## **<- [ WIP ]**
+
+---
+
+---
+
+# :rocket: [Gigalixir](https://hexdocs.pm/phoenix/gigalixir.html#content)
+
+Elixir 向けの PaaS である **Gigalixir** により、Phoenix アプリケーションをデプロイします
+
+- [Gigalixir（公式）](https://gigalixir.com/)
+
+  - [Docs](https://gigalixir.readthedocs.io/en/latest/)
+
+- 前述のモックアプリケーション `hello` を使用します
